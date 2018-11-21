@@ -29,8 +29,6 @@ namespace GameLevelEditor
             }
         }
 
-        //private string path;
-
         public string Path { get; private set; }
 
         public int Width
@@ -54,11 +52,6 @@ namespace GameLevelEditor
             Path = path;
             image = Image.FromFile(path);
         }
-
-        //public void Load()
-        //{
-        //    image = Image.FromFile(path);
-        //}
 
         public override string ToString()
         {

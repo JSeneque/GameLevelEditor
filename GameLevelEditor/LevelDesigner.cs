@@ -14,12 +14,23 @@ namespace GameLevelEditor
         public Spritesheet Spritesheet { get; private set; }
         Bitmap canvasArea, spritesheetArea;
 
+        // stores the tiles drawn on the map
+        // private TileInfo tiles[180] = new TileInfo[180];
+
+        // has the information for the selected tile
+        TileInfo selectedTile;
+
+        // stores the map of the level draw
+        TileInfo[] map;
+
+
         int gridWidth = 16;
         int gridHeight = 16;
         int spacing = 0;
 
 
-        public Point CurrentTile { get; private set; } = new Point();
+        public Point SelectedCanvasTile { get; private set; } = new Point();
+        public Point SelectedSpritesheetTile { get; private set; } = new Point();
 
         public string Filename
         {
@@ -36,9 +47,12 @@ namespace GameLevelEditor
 
             // get the dimensions of the canvas area
             canvasArea = new Bitmap(CanvasPBox.Width, CanvasPBox.Height);
-            spritesheetArea = new Bitmap (spritesheetPBox.Width, spritesheetPBox.Height); // fix these later
+            //spritesheetArea = new Bitmap (spritesheetPBox.Width, spritesheetPBox.Height); // fix these later
             clearCanvas();
-            clearSS();
+            //clearSS();
+
+            // we can ask the user to define the size of the map at the start
+            map = new TileInfo[180];
         }
 
         private void CanvasPBox_Click(object sender, EventArgs e)
@@ -52,9 +66,12 @@ namespace GameLevelEditor
                 MouseEventArgs mouse = e as MouseEventArgs;
 
                 // draw the current tile there
-                CurrentTile = new Point(
+                SelectedCanvasTile = new Point(
                     mouse.X / (gridWidth + spacing)
                     , mouse.Y / (gridHeight + spacing));
+
+                // add the selected tiles to the map list
+                map[SelectedCanvasTile.X + (SelectedCanvasTile.Y)*15] =  selectedTile;
 
                 drawGridOnCanvas();
             }
@@ -68,10 +85,6 @@ namespace GameLevelEditor
             // define the size of the tile
             // understand what << 2 means exactly
             Rectangle dest = new Rectangle(0, 0, gridWidth << 2, gridHeight << 2);
-
-
-
-
         }
 
         private void spritesheetPBox_Click(object sender, EventArgs e)
@@ -163,8 +176,8 @@ namespace GameLevelEditor
 
             Pen highlight = new Pen(Brushes.Red);
             g.DrawRectangle(highlight,
-                CurrentTile.X * (gridWidth + spacing),
-                CurrentTile.Y * (gridHeight + spacing),
+                SelectedCanvasTile.X * (gridWidth + spacing),
+                SelectedCanvasTile.Y * (gridHeight + spacing),
                 gridWidth + spacing,
                 gridHeight + spacing);
 
@@ -206,8 +219,8 @@ namespace GameLevelEditor
 
             Pen highlight = new Pen(Brushes.Red);
             g.DrawRectangle(highlight,
-                CurrentTile.X * (gridWidth + spacing),
-                CurrentTile.Y * (gridHeight + spacing),
+                SelectedSpritesheetTile.X * (gridWidth + spacing),
+                SelectedSpritesheetTile.Y * (gridHeight + spacing),
                 gridWidth + spacing,
                 gridHeight + spacing);
 
@@ -240,9 +253,11 @@ namespace GameLevelEditor
             if (e.GetType() == typeof(MouseEventArgs))
             {
                 MouseEventArgs mouse = e as MouseEventArgs;
-                CurrentTile = new Point( 
+                SelectedSpritesheetTile = new Point( 
                     mouse.X / (gridWidth + spacing)
                     , mouse.Y / (gridHeight + spacing));
+
+                selectedTile = new TileInfo(SelectedSpritesheetTile, Spritesheet);
 
                 drawGridOnSpritesheet();
             }
@@ -250,7 +265,7 @@ namespace GameLevelEditor
 
         private void LevelDesigner_Shown(object sender, EventArgs e)
         {
-            drawGrid();
+            //drawGrid();
         }
 
         // clear spritesheet area
