@@ -39,10 +39,8 @@
             this.textBoxSpacing = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.spritesheetPBox = new System.Windows.Forms.PictureBox();
-            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.CanvasPBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spritesheetPBox)).BeginInit();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // CanvasPBox
@@ -135,29 +133,21 @@
             // 
             // spritesheetPBox
             // 
-            this.spritesheetPBox.Location = new System.Drawing.Point(3, 3);
+            this.spritesheetPBox.Location = new System.Drawing.Point(833, 26);
             this.spritesheetPBox.Name = "spritesheetPBox";
-            this.spritesheetPBox.Size = new System.Drawing.Size(431, 603);
-            this.spritesheetPBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.spritesheetPBox.Size = new System.Drawing.Size(389, 584);
             this.spritesheetPBox.TabIndex = 2;
             this.spritesheetPBox.TabStop = false;
             this.spritesheetPBox.Click += new System.EventHandler(this.spritesheetPBox_Click_1);
-            // 
-            // panel1
-            // 
-            this.panel1.AutoScroll = true;
-            this.panel1.Controls.Add(this.spritesheetPBox);
-            this.panel1.Location = new System.Drawing.Point(833, 29);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(437, 609);
-            this.panel1.TabIndex = 11;
+            this.spritesheetPBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.spritesheetPBox_DragDrop);
+            this.spritesheetPBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.spritesheetPBox_DragEnter);
             // 
             // LevelDesigner
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1282, 679);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.spritesheetPBox);
             this.Controls.Add(this.textBoxSpacing);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.textBoxHeight);
@@ -173,8 +163,6 @@
             this.Shown += new System.EventHandler(this.LevelDesigner_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.CanvasPBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spritesheetPBox)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -193,7 +181,6 @@
         private System.Windows.Forms.TextBox textBoxSpacing;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.PictureBox spritesheetPBox;
-        private System.Windows.Forms.Panel panel1;
     }
 }
 

@@ -53,6 +53,9 @@ namespace GameLevelEditor
 
             // we can ask the user to define the size of the map at the start
             map = new TileInfo[180];
+
+            // allow dragging an image to the spritesheet picture box
+            spritesheetPBox.AllowDrop = true;
         }
 
         private void CanvasPBox_Click(object sender, EventArgs e)
@@ -73,9 +76,30 @@ namespace GameLevelEditor
                 // add the selected tiles to the map list
                 map[SelectedCanvasTile.X + (SelectedCanvasTile.Y)*15] =  selectedTile;
 
-                drawGridOnCanvas();
+                DrawTiles();
+                //drawGridOnCanvas();
+                
             }
         }
+
+        private void spritesheetPBox_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Copy;
+        }
+
+        private void spritesheetPBox_DragDrop(object sender, DragEventArgs e)
+        {
+            foreach (string pic in ((string[])e.Data.GetData(DataFormats.FileDrop)))
+            {
+                Image img = Image.FromFile(pic);
+                spritesheetPBox.Image = img;
+                Spritesheet = new Spritesheet(pic);
+            }
+            
+            spritesheetArea = new Bitmap(Spritesheet.Width, Spritesheet.Height);
+            drawGrid();
+        }
+
 
         private void DrawTile()
         {
@@ -100,6 +124,7 @@ namespace GameLevelEditor
             }
 
             textBoxWidth.Text = gridWidth.ToString();
+            Spritesheet.GridWidth = gridWidth;
         }
 
         private void textBoxHeight_TextChanged(object sender, EventArgs e)
@@ -110,7 +135,7 @@ namespace GameLevelEditor
             }
 
             textBoxHeight.Text = gridHeight.ToString();
-
+            Spritesheet.GridHeight = gridHeight;
         }
 
         private void textBoxSpacing_TextChanged(object sender, EventArgs e)
@@ -121,6 +146,7 @@ namespace GameLevelEditor
             }
 
             textBoxSpacing.Text = spacing.ToString();
+            Spritesheet.GridSpacing = spacing;
         }
 
         private void buttonLoad_Click(object sender, EventArgs e)
@@ -140,7 +166,7 @@ namespace GameLevelEditor
 
         private void drawGrid()
         {
-            drawGridOnCanvas();
+            //drawGridOnCanvas();
             drawGridOnSpritesheet();
         }
 
@@ -151,14 +177,10 @@ namespace GameLevelEditor
             Graphics g;
             g = Graphics.FromImage(canvasArea);
 
-            g.Clear(Color.White);
+            //g.Clear(Color.White);
 
             if (Spritesheet == null)
                 return;
-
-            // draw the spritesheet (regardless of size mine you) to the
-            //g.DrawImage(Spritesheet.Image, 0, 0);
-            //g.DrawImageU
 
             Pen pen = new Pen(Brushes.LightGray);
 
@@ -280,6 +302,50 @@ namespace GameLevelEditor
             g.Dispose();
 
             spritesheetPBox.Image = spritesheetArea;
+        }
+
+        private void DrawTiles()
+        {
+            Graphics g = Graphics.FromImage(canvasArea);
+            g.FillRectangle(Brushes.White, 0, 0, canvasArea.Width, canvasArea.Height);
+
+            
+
+            // paint the tiles to the picturebox
+            for (int i = 0; i < map.Length; i++)
+            {
+                if (map[i] != null)
+                {
+                    // get the tile at that map location
+                    TileInfo tile = map[i];
+                    int row, col;
+
+                    // determine the grid position based
+                    // hardcoded 15 columns
+                    row = i / 15;
+                    col = i % 15;
+
+                    // set the destination rect
+                    Rectangle dest = new Rectangle((Spritesheet.GridWidth + Spritesheet.GridSpacing) * col
+                        , (Spritesheet.GridHeight + Spritesheet.GridSpacing) * row
+                        , Spritesheet.GridWidth, Spritesheet.GridHeight);
+
+                    Rectangle source = new Rectangle(
+                      tile.Index.X * (Spritesheet.GridWidth +
+                           Spritesheet.GridSpacing),
+                       tile.Index.Y * (Spritesheet.GridHeight +
+                           Spritesheet.GridSpacing),
+                       Spritesheet.GridWidth,
+                       Spritesheet.GridHeight);
+
+                    g.DrawImage(Spritesheet.Image, dest, source, GraphicsUnit.Pixel);
+                }
+                
+            }
+            //g.DrawImage(Spritesheet.Image, 0, 0);
+            g.Dispose();
+
+            CanvasPBox.Image = canvasArea;
         }
 
 
