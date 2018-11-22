@@ -45,7 +45,8 @@
             // 
             // CanvasPBox
             // 
-            this.CanvasPBox.Location = new System.Drawing.Point(13, 29);
+            this.CanvasPBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CanvasPBox.Location = new System.Drawing.Point(12, 26);
             this.CanvasPBox.Name = "CanvasPBox";
             this.CanvasPBox.Size = new System.Drawing.Size(811, 638);
             this.CanvasPBox.TabIndex = 0;
@@ -65,7 +66,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 13);
+            this.label1.Location = new System.Drawing.Point(9, 10);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(103, 13);
             this.label1.TabIndex = 3;
@@ -133,6 +134,7 @@
             // 
             // spritesheetPBox
             // 
+            this.spritesheetPBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.spritesheetPBox.Location = new System.Drawing.Point(833, 26);
             this.spritesheetPBox.Name = "spritesheetPBox";
             this.spritesheetPBox.Size = new System.Drawing.Size(389, 584);

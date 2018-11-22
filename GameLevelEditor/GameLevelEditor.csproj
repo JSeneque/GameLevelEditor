@@ -51,12 +51,21 @@
     <Compile Include="LevelDesigner.Designer.cs">
       <DependentUpon>LevelDesigner.cs</DependentUpon>
     </Compile>
+    <Compile Include="MDIParent1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MDIParent1.Designer.cs">
+      <DependentUpon>MDIParent1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spritesheet.cs" />
     <Compile Include="TileInfo.cs" />
     <EmbeddedResource Include="LevelDesigner.resx">
       <DependentUpon>LevelDesigner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MDIParent1.resx">
+      <DependentUpon>MDIParent1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

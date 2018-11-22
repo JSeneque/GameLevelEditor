@@ -16,7 +16,25 @@ namespace GameLevelEditor
             set { name = value; }
         }
 
-        // private TileInfo[] tiles = new TileInfo[];
+        private int rows;
+
+        public int Rows
+        {
+            get { return rows; }
+            set { rows = value; }
+        }
+
+        private int columns;
+
+        public int Columns
+        {
+            get { return columns; }
+            set { columns = value; }
+        }
+
+        private TileInfo[] map;
+
+
 
     }
 }

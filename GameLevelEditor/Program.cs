@@ -15,7 +15,8 @@ namespace GameLevelEditor
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LevelDesigner());
+            //Application.Run(new LevelDesigner());
+            Application.Run(new MDIParent1());
         }
     }
 }
