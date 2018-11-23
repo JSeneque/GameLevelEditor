@@ -14,14 +14,9 @@ namespace GameLevelEditor
         public Spritesheet Spritesheet { get; private set; }
         Bitmap canvasArea, spritesheetArea;
 
-        // stores the tiles drawn on the map
-        // private TileInfo tiles[180] = new TileInfo[180];
-
         // has the information for the selected tile
         TileInfo selectedTile;
 
-        // stores the map of the level draw
-        TileInfo[] map;
 
         // stores the level information
         Level level;
@@ -30,6 +25,10 @@ namespace GameLevelEditor
         int gridWidth = 64;
         int gridHeight = 64;
         int spacing = 1;
+
+        // next version allow the user to specific the size of the level
+        int levelRows = 15;
+        int levelColumns = 12;
 
 
         public Point SelectedCanvasTile { get; private set; } = new Point();
@@ -50,12 +49,12 @@ namespace GameLevelEditor
 
             // get the dimensions of the canvas area
             canvasArea = new Bitmap(CanvasPBox.Width, CanvasPBox.Height);
-            //spritesheetArea = new Bitmap (spritesheetPBox.Width, spritesheetPBox.Height); // fix these later
             clearCanvas();
-            //clearSS();
 
-            // we can ask the user to define the size of the map at the start
-            map = new TileInfo[180];
+            level = new Level();
+
+            // later we will allow the user to choose the size of the level
+            level.SetMapSize(levelColumns, levelRows);
 
             // allow dragging an image to the spritesheet picture box
             spritesheetPBox.AllowDrop = true;
@@ -77,11 +76,9 @@ namespace GameLevelEditor
                     , mouse.Y / (gridHeight + spacing));
 
                 // add the selected tiles to the map list
-                map[SelectedCanvasTile.X + (SelectedCanvasTile.Y)*15] =  selectedTile;
+                level.SetTileAt(SelectedCanvasTile.X + (SelectedCanvasTile.Y) * levelRows,selectedTile);
 
                 DrawTiles();
-                //drawGridOnCanvas();
-                
             }
         }
 
@@ -114,10 +111,10 @@ namespace GameLevelEditor
             Rectangle dest = new Rectangle(0, 0, gridWidth << 2, gridHeight << 2);
         }
 
-        private void spritesheetPBox_Click(object sender, EventArgs e)
-        {
+        //private void spritesheetPBox_Click(object sender, EventArgs e)
+        //{
 
-        }
+        //}
 
         private void textBoxWidth_TextChanged(object sender, EventArgs e)
         {
@@ -349,18 +346,19 @@ namespace GameLevelEditor
             
 
             // paint the tiles to the picturebox
-            for (int i = 0; i < map.Length; i++)
+            for (int i = 0; i < level.GetMapSize(); i++)
             {
-                if (map[i] != null)
+                //if (map[i] != null)
+                if (level.GetTileAt(i) != null)
                 {
                     // get the tile at that map location
-                    TileInfo tile = map[i];
+                    TileInfo tile = level.GetTileAt(i);
+
                     int row, col;
 
                     // determine the grid position based
-                    // hardcoded 15 columns
-                    row = i / 15;
-                    col = i % 15;
+                    row = i / levelRows;
+                    col = i % levelRows;
 
                     // set the destination rect
                     Rectangle dest = new Rectangle((Spritesheet.GridWidth + Spritesheet.GridSpacing) * col
@@ -379,7 +377,6 @@ namespace GameLevelEditor
                 }
                 
             }
-            //g.DrawImage(Spritesheet.Image, 0, 0);
             g.Dispose();
 
             CanvasPBox.Image = canvasArea;
