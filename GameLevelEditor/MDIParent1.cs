@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace GameLevelEditor
 {
@@ -20,9 +21,13 @@ namespace GameLevelEditor
 
         private void ShowNewForm(object sender, EventArgs e)
         {
-            Form childForm = new Form();
+            //Form childForm = new Form();
+            //childForm.MdiParent = this;
+            //childForm.Text = "Window " + childFormNumber++;
+            //childForm.Show();
+            Form childForm = new LevelDesigner();
             childForm.MdiParent = this;
-            childForm.Text = "Window " + childFormNumber++;
+            childForm.Text = "Unnamed Level";
             childForm.Show();
         }
 
@@ -30,10 +35,29 @@ namespace GameLevelEditor
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            openFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            //openFileDialog.Filter = "JNS Files (*.jns)|*.jns|Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            openFileDialog.Filter = "JNS Files (*.jns)|*.jns";
+
+            //LevelDesigner levelDesigner = this.ActiveMdiChild as LevelDesigner;
+
             if (openFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                string FileName = openFileDialog.FileName;
+                string path = openFileDialog.FileName;
+                string filename = openFileDialog.SafeFileName;
+
+
+                Form childForm = new LevelDesigner();
+
+                
+                childForm.MdiParent = this;
+                childForm.Text = filename;
+                childForm.Show();
+
+                // load file into leveldesigner
+                LevelDesigner levelDesigner = this.ActiveMdiChild as LevelDesigner;
+                levelDesigner.LoadFromFile(path);
+
+                
             }
         }
 
@@ -42,9 +66,11 @@ namespace GameLevelEditor
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 string FileName = saveFileDialog.FileName;
+                
             }
         }
 
@@ -53,17 +79,17 @@ namespace GameLevelEditor
             this.Close();
         }
 
-        private void CutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
+        //private void CutToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //}
 
-        private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
+        //private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //}
 
-        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
+        //private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //}
 
         private void ToolBarToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -109,6 +135,37 @@ namespace GameLevelEditor
             childForm.MdiParent = this;
             childForm.Text = "Level " + childFormNumber++;
             childForm.Show();
+        }
+
+        private void saveToolStripButton_Click(object sender, EventArgs e)
+        {
+
+            if (this.ActiveMdiChild != null)
+            {
+                if (this.ActiveMdiChild.Text == "Unnamed Level")
+                {
+
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    saveFileDialog.Filter = "JNS Files (*.jns)|*.jns";
+
+                    if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+                    {
+                        string path = saveFileDialog.FileName;
+                        FileInfo filename = new FileInfo(saveFileDialog.FileName);
+
+                        LevelDesigner levelDesigner = this.ActiveMdiChild as LevelDesigner;
+                        levelDesigner.SaveToFile(path);
+                        this.ActiveMdiChild.Text = filename.Name;
+                    }
+                } else
+                {
+                    LevelDesigner levelDesigner = this.ActiveMdiChild as LevelDesigner;
+                    levelDesigner.SaveToFile(this.ActiveMdiChild.Text);
+                }
+
+            }
+
         }
     }
 }

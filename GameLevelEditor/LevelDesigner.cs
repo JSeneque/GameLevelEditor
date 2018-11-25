@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
+
+
 namespace GameLevelEditor
 {
     public partial class LevelDesigner : Form
@@ -76,7 +78,7 @@ namespace GameLevelEditor
                     , mouse.Y / (gridHeight + spacing));
 
                 // add the selected tiles to the map list
-                level.SetTileAt(SelectedCanvasTile.X + (SelectedCanvasTile.Y) * levelRows,selectedTile);
+                level.SetTileAt(SelectedCanvasTile.X + (SelectedCanvasTile.Y) * levelRows, selectedTile);
 
                 DrawTiles();
             }
@@ -95,7 +97,7 @@ namespace GameLevelEditor
                 spritesheetPBox.Image = img;
                 Spritesheet = new Spritesheet(pic);
             }
-            
+
             spritesheetArea = new Bitmap(Spritesheet.Width, Spritesheet.Height);
             drawGrid();
         }
@@ -111,11 +113,7 @@ namespace GameLevelEditor
             Rectangle dest = new Rectangle(0, 0, gridWidth << 2, gridHeight << 2);
         }
 
-        //private void spritesheetPBox_Click(object sender, EventArgs e)
-        //{
-
-        //}
-
+  
         private void textBoxWidth_TextChanged(object sender, EventArgs e)
         {
             if (int.TryParse(textBoxWidth.Text, out gridWidth) == true)
@@ -124,7 +122,8 @@ namespace GameLevelEditor
             }
 
             textBoxWidth.Text = gridWidth.ToString();
-            Spritesheet.GridWidth = gridWidth;
+            //Spritesheet.GridWidth = gridWidth;
+            level.GridWidth = gridWidth;
         }
 
         private void textBoxHeight_TextChanged(object sender, EventArgs e)
@@ -135,7 +134,8 @@ namespace GameLevelEditor
             }
 
             textBoxHeight.Text = gridHeight.ToString();
-            Spritesheet.GridHeight = gridHeight;
+            //Spritesheet.GridHeight = gridHeight;
+            level.GridHeight = gridHeight;
         }
 
         private void textBoxSpacing_TextChanged(object sender, EventArgs e)
@@ -146,7 +146,8 @@ namespace GameLevelEditor
             }
 
             textBoxSpacing.Text = spacing.ToString();
-            Spritesheet.GridSpacing = spacing;
+            //Spritesheet.GridSpacing = spacing;
+            level.GridSpacing = spacing;
         }
 
         private void buttonLoad_Click(object sender, EventArgs e)
@@ -264,20 +265,20 @@ namespace GameLevelEditor
                 col = i % 6;
 
                 // set the destination rect
-                Rectangle dest = new Rectangle((Spritesheet.GridWidth + Spritesheet.GridSpacing) * col
-                    , (Spritesheet.GridHeight + Spritesheet.GridSpacing) * row
-                    , Spritesheet.GridWidth, Spritesheet.GridHeight);
+                Rectangle dest = new Rectangle((level.GridWidth + level.GridSpacing) * col
+                    , (level.GridHeight + level.GridSpacing) * row
+                    , level.GridWidth, level.GridHeight);
 
                 Rectangle source = new Rectangle(
-                    col * (Spritesheet.GridWidth +
-                        Spritesheet.GridSpacing),
-                    row * (Spritesheet.GridHeight +
-                        Spritesheet.GridSpacing),
-                    Spritesheet.GridWidth,
-                    Spritesheet.GridHeight);
+                    col * (level.GridWidth +
+                        level.GridSpacing),
+                    row * (level.GridHeight +
+                        level.GridSpacing),
+                    level.GridWidth,
+                    level.GridHeight);
 
                 g.DrawImage(Spritesheet.Image, dest, source, GraphicsUnit.Pixel);
-                
+
 
             }
             //g.DrawImage(Spritesheet.Image, 0, 0);
@@ -304,12 +305,12 @@ namespace GameLevelEditor
         {
             if (Spritesheet == null)
                 return;
-            
+
             // get tile coordinate of click 
             if (e.GetType() == typeof(MouseEventArgs))
             {
                 MouseEventArgs mouse = e as MouseEventArgs;
-                SelectedSpritesheetTile = new Point( 
+                SelectedSpritesheetTile = new Point(
                     mouse.X / (gridWidth + spacing)
                     , mouse.Y / (gridHeight + spacing));
 
@@ -343,7 +344,7 @@ namespace GameLevelEditor
             Graphics g = Graphics.FromImage(canvasArea);
             g.FillRectangle(Brushes.White, 0, 0, canvasArea.Width, canvasArea.Height);
 
-            
+
 
             // paint the tiles to the picturebox
             for (int i = 0; i < level.GetMapSize(); i++)
@@ -361,29 +362,55 @@ namespace GameLevelEditor
                     col = i % levelRows;
 
                     // set the destination rect
-                    Rectangle dest = new Rectangle((Spritesheet.GridWidth + Spritesheet.GridSpacing) * col
-                        , (Spritesheet.GridHeight + Spritesheet.GridSpacing) * row
-                        , Spritesheet.GridWidth, Spritesheet.GridHeight);
+                    Rectangle dest = new Rectangle((level.GridWidth + level.GridSpacing) * col
+                        , (level.GridHeight + level.GridSpacing) * row
+                        , level.GridWidth, level.GridHeight);
 
                     Rectangle source = new Rectangle(
-                      tile.Index.X * (Spritesheet.GridWidth +
-                           Spritesheet.GridSpacing),
-                       tile.Index.Y * (Spritesheet.GridHeight +
-                           Spritesheet.GridSpacing),
-                       Spritesheet.GridWidth,
-                       Spritesheet.GridHeight);
+                      tile.Index.X * (level.GridWidth +
+                           level.GridSpacing),
+                       tile.Index.Y * (level.GridHeight +
+                           level.GridSpacing),
+                       level.GridWidth,
+                       level.GridHeight);
 
                     g.DrawImage(Spritesheet.Image, dest, source, GraphicsUnit.Pixel);
                 }
-                
+
             }
             g.Dispose();
 
             CanvasPBox.Image = canvasArea;
         }
 
+        public void SaveToFile(string filename)
+        {
+            level.SaveToFile(filename);
+        }
 
+        public void LoadFromFile(string path)
+        {
+            // load the level
+            level = Level.LoadFromFile(path);
+
+            // we need to first set the spritesheet canvas area and for now, just file the first tile
+            // and use the spritesheet path. The assumption is we can only save a file if there is
+            // at last one tile drawn.
+            // load the spritesheet into spritesheet picture box
+            Spritesheet = new Spritesheet(level.GetSpritesheet().Path);
+
+            spritesheetArea = new Bitmap(Spritesheet.Width, Spritesheet.Height);
+            drawGrid();
+
+            // draw the canvas
+            DrawTiles();
+
+            // populate the grid details
+            textBoxWidth.Text = level.GridWidth.ToString();
+            textBoxHeight.Text = level.GridHeight.ToString();
+            textBoxSpacing.Text = level.GridSpacing.ToString();
+
+        }
     }
 
-    
 }

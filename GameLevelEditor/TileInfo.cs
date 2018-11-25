@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GameLevelEditor
 {
-    class TileInfo
+    public class TileInfo
     {
 
         //private int index;
