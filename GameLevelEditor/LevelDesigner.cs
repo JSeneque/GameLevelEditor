@@ -72,15 +72,32 @@ namespace GameLevelEditor
             {
                 MouseEventArgs mouse = e as MouseEventArgs;
 
-                // draw the current tile there
-                SelectedCanvasTile = new Point(
+                if (mouse.Button == MouseButtons.Left)
+                {
+
+                    // draw the current tile there
+                    SelectedCanvasTile = new Point(
                     mouse.X / (gridWidth + spacing)
                     , mouse.Y / (gridHeight + spacing));
 
-                // add the selected tiles to the map list
-                level.SetTileAt(SelectedCanvasTile.X + (SelectedCanvasTile.Y) * levelRows, selectedTile);
+                    // add the selected tiles to the map list
+                    level.SetTileAt(SelectedCanvasTile.X + (SelectedCanvasTile.Y) * levelRows, selectedTile);
 
-                DrawTiles();
+                    DrawTiles();
+                }
+                else if (mouse.Button == MouseButtons.Right)
+                {
+                    // draw the current tile there
+                    SelectedCanvasTile = new Point(
+                    mouse.X / (gridWidth + spacing)
+                    , mouse.Y / (gridHeight + spacing));
+
+                    level.RemoveTileAt(SelectedCanvasTile.X + (SelectedCanvasTile.Y) * levelRows);
+
+                    DrawTiles();
+                }
+
+                
             }
         }
 

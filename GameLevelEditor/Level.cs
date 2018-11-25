@@ -76,6 +76,16 @@ namespace GameLevelEditor
             }
         }
 
+        // removes the tile at that particular location
+        public void RemoveTileAt(int index)
+        {
+            map[index] = null;
+                
+            // hmmmm maybe I should track the number of painted tiles to
+            // so I can determine if it is empty when I remove one
+            
+        }
+
         // checks if the map is empty
         public bool Empty()
         {
@@ -84,10 +94,6 @@ namespace GameLevelEditor
 
         public void SaveToFile(string fileName)
         {
-
-            
-
-
             // save an existing file
             if (fileName != null)
             {
