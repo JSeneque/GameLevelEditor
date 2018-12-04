@@ -34,7 +34,9 @@ namespace GameLevelEditor
         private void OpenFile(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            //openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            string directory = Directory.GetCurrentDirectory();
+            openFileDialog.InitialDirectory = directory;
             //openFileDialog.Filter = "JNS Files (*.jns)|*.jns|Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
             openFileDialog.Filter = "JNS Files (*.jns)|*.jns";
 
@@ -64,7 +66,9 @@ namespace GameLevelEditor
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            //saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            string directory = Directory.GetCurrentDirectory();
+            saveFileDialog.InitialDirectory = directory;
             saveFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
             
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
@@ -146,7 +150,10 @@ namespace GameLevelEditor
                 {
 
                     SaveFileDialog saveFileDialog = new SaveFileDialog();
-                    saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    //saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    //saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                    string directory = Directory.GetCurrentDirectory();
+                    saveFileDialog.InitialDirectory = directory;
                     saveFileDialog.Filter = "JNS Files (*.jns)|*.jns";
 
                     if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
