@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 
 
@@ -400,8 +401,20 @@ namespace GameLevelEditor
             CanvasPBox.Image = canvasArea;
         }
 
-        public void SaveToFile(string filename)
+        public void SaveToFile(string filename) 
         {
+            var relative_path = Path.GetDirectoryName(filename);
+            // copying file
+
+            // first check if the spritesheet doesn't already exist at that location
+            if(!File.Exists(relative_path + "\\" + Path.GetFileName(Spritesheet.Path)))
+            {
+                File.Copy(Spritesheet.Path, relative_path + "\\" + Path.GetFileName(Spritesheet.Path), true);
+            }
+           
+
+            Spritesheet.Path = Path.GetFileName(Spritesheet.Path);
+
             level.SaveToFile(filename);
         }
 
@@ -414,7 +427,8 @@ namespace GameLevelEditor
             // and use the spritesheet path. The assumption is we can only save a file if there is
             // at last one tile drawn.
             // load the spritesheet into spritesheet picture box
-            Spritesheet = new Spritesheet(level.GetSpritesheet().Path);
+            //Spritesheet = new Spritesheet(level.GetSpritesheet().Path);
+            Spritesheet = new Spritesheet(Path.GetDirectoryName(path) + "\\" + level.GetSpritesheet().Path);
 
             spritesheetArea = new Bitmap(Spritesheet.Width, Spritesheet.Height);
             drawGrid();
